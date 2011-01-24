@@ -1,0 +1,148 @@
+YzKbNavNode
+Enables keyboard navigation on webpage
+
+Copyright (c) 2010 Weiss I Nicht <KeineAhnung@atliva.com> 
+@author Weiss I Nicht 
+(sha-1: 90f01291285340bf03c2d41952c4b21b3d338907)
+http://github.com/comolongo/yzKbNav
+
+This library allows developers to easily bring keyboard navigation to their websites. The code base comes with a very extensible API, so it is easy to customize and extend the existing functionalities. This library requires jQuery and uses it to do basic dom manipulation i.e. adding and checking for the presence of certain CSS classes.
+
+Setting up node traversal in HTML:
+Each keyboard traversable item on the page is a node, which can have children, siblings, and a parent node. All nodes are explicitly assigned a row and column number to determine how the focus will change when the user tries to move along the XY axis.
+
+Basic example of vertical list: <http://yz-demos.appspot.com/yzKbNavNode/demo/basic-list-example.html>
+
+<ul>
+  <li class="yzkn" data-yzkn-pos="0:0">A</li>
+  <li class="yzkn" data-yzkn-pos="1:0">B</li>
+  <li class="yzkn" data-yzkn-pos="2:0">C</li>
+  <li class="yzkn" data-yzkn-pos="3:0">D</li>
+</ul>
+
+The data-yzkn-pos indicates the node's coordinates in the format of row#:col#. Item A is in row 0 and column 0, item B is in row 1 and column 0, etc.
+
+Example of grid <http://yz-demos.appspot.com/yzKbNavNode/demo/grid-example.html> :
+
+<div id="grid-container">
+  <!-- Draws a 3x3 grid -->
+  <div class="yzkn grid-item" data-yzkn-pos="0:0">A</div>
+  <div class="yzkn grid-item" data-yzkn-pos="0:1">B</div>
+  <div class="yzkn grid-item end" data-yzkn-pos="0:2">C</div>
+  <div class="yzkn grid-item first" data-yzkn-pos="1:0">D</div>
+  <div class="yzkn grid-item" data-yzkn-pos="1:1">E</div>
+  <div class="yzkn grid-item end" data-yzkn-pos="1:2">F</div>
+  <div class="yzkn grid-item first" data-yzkn-pos="2:0">G</div>
+  <div class="yzkn grid-item" data-yzkn-pos="2:1">H</div>
+  <div class="yzkn grid-item" data-yzkn-pos="2:2">I</div>
+</div>
+
+Here we have a slightly more complicated grid, with three rows (rows: 0, 1, and 2) and each row has 3 columns (columns: 0, 1, and 2)
+The column numbers don't need to be continuous, this allows for holes in the grid, i.e. <http://yz-demos.appspot.com/yzKbNavNode/demo/grid-with-gaps-example.html>
+
+<div id="grid-container">
+  <div class="yzkn grid-item" data-yzkn-pos="0:0">A</div>
+  <div class="yzkn grid-item" data-yzkn-pos="0:1">B</div>
+  <div class="yzkn grid-item end" data-yzkn-pos="0:2">C</div>
+  <div class="yzkn grid-item first" data-yzkn-pos="1:0">D</div>
+  <!--<div class="yzkn grid-item" data-yzkn-pos="1:1">E</div>
+  <div class="yzkn grid-item end" data-yzkn-pos="1:2">F</div>-->
+  <div class="yzkn grid-item first" data-yzkn-pos="2:0">G</div>
+  <div class="yzkn grid-item" data-yzkn-pos="2:1">H</div>
+  <div class="yzkn grid-item" data-yzkn-pos="2:2">I</div>
+</div>
+
+Since there is no grid under item C, the focus will go to the closest column number in the row below it.
+
+Node hierarchy:
+Thus far, the examples have been only node traversal among sibling nodes, in the XY plane. Nodes can also have parent-child relationships.
+
+Example of parent and child nodes
+<http://yz-demos.appspot.com/yzKbNavNode/demo/parent-child-example.html>
+
+<ul>
+  <li class="yzkn" data-yzkn-pos="0:0">
+    Node A (Press enter to step into child node A-1)
+    <ul>
+      <li class="yzkn" data-yzkn-pos="0:0">Node A-1</li>
+      <li class="yzkn" data-yzkn-pos="1:0">Node A-2 (press backspace to go back to parent A-1)</li>
+    </ul>
+  </li>
+  <li class="yzkn" data-yzkn-pos="1:0">
+    Node B
+    <ul>
+      <li class="yzkn" data-yzkn-pos="0:0">Node B-1</li>
+      <li class="yzkn" data-yzkn-pos="1:0">Node B-2</li>
+    </ul>
+  </li>
+</ul>
+
+
+Setting up JavaScript:
+On page load, yzKbNavManager.init() is run to initialize all of the nodes. This method gathers all elements on the page that have the class yzkn and then creates a yzKbNavNode object to associate with it and keep track of the node's parent, children, and sibling information. If no default focus node is defined, the default item to focus on will be the element in the first column of the first row. When the user presses, up, down, left, right, enter, or backspace, an event handler that is attached to the document.body in yzKbNavManager::_setEventHandlers() picks up the keystrokes and passes it to the currently focused node. The currently focused node will then find the appropriate node to focus on, and will call yzKbNavManager::focusToNewNode() to bring the focus to that node. Instead of registering an event handler for each keyboard node, clicking on a node will bubble up the DOM until it reaches the document root, where it gets processed in yzKbNavManager::focusToNewNode.
+
+Javascript Mixin hooks:
+Each node instance has a series of callbacks that can add custom functionality. These hooks allow for custom handling of behavior when focus either 
+enters the node or when it leaves it. A return value of undefined from the callbacks will allow the default actions that regularly take place to still happen. A return value or true or false will stop the flow and prevent the default actions; i.e. the moveToXYCallback hook is called when the focus is about to move into the current node instance. If the moveToXYCallback is set to a function that returns true or false, then the focus will not goto the current node; it will stay at the previously focused node.
+
+List of Mixin Hooks in yzKbNavNode:
+
+// called on currently focused node when user presses any keys 
+yzKbNavNode.onKeyStrokeCallback
+
+// called when focus moves into yzKbNavNode along XY axis
+// (e.g. when focus moves into current node instance from an adjacent node)
+yzKbNavNode.moveToXYCallback 
+
+// called when focus moves out of yzKbNavNode along XY axis
+// (e.g. when focus moves out of current node instance and is about to go into an adjacent node)
+yzKbNavNode.moveFromXYCallback
+
+// called when focus moves into yzKbNavNode along Z axis
+// (e.g. when focus moves into current node instance from a parent or child node)
+yzKbNavNode.moveToInOutCallback 
+
+// called when focus moves out of yzKbNavNode along Z axis
+// (e.g. when focus moves out of current node instance and is about to go into a parent or child node)
+yzKbNavNode.moveFromInOutCallback
+
+// called when node is being focused on
+yzKbNavNode.onFocusCallback
+
+// called when a new node is being focused on and current node instance is about to give up its focus
+yzKbNavNode.onUnfocusCallback
+
+E.g: <http://yz-demos.appspot.com/yzKbNavNode/demo/attach-js-callback-example.html>
+
+<ul>
+  <li id="show-position-node" class="yzkn" data-yzkn-pos="0:0">
+    <span id="position-display">Show movement</span>
+  </li>
+  <li id="show-alert-node" class="yzkn" data-yzkn-pos="1:0">
+    Show Alert On Enter
+  </li>
+</ul>
+<script>
+$(document).ready(function(){
+  // Create, attach, and initialize yzKbNodes for all elements in DOM with yzkn class
+  yzKbNavManager.init()
+  // get corresponding the yzKbNode instance for the $('#show-position-node') DOM element
+  var showPositionNode = yzKbNavManager.getNodeByDom($('#show-position-node'))
+  // add mixin to handle behavior when focus leaves showPositionNode along XY axis (e.g. when focus moves to another node on the right)
+  showPositionNode.moveFromXYCallback = function(direction) {
+    $('#position-display').html(direction)
+  }
+  // get the corresponding yzKbNode instance of the $('#show-alert-node') DOM element
+  var showAlertNode = yzKbNavManager.getNodeByDom($('#show-alert-node'))
+  // Add mixin to handle behavior when focus leaves showAlertNode along Z axis (e.g. when focus tries to move to a child node, i.e. when user presses enter)
+  showAlertNode.moveFromInOutCallback = function(direction) {
+    if (direction == 'in') {
+      alert('moved in')
+    }
+  }
+});
+</script>
+
+Look in the source code of yzKbNavNode.js for more details on how to use the mixin hooks
+
+

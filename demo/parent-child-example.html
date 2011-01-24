@@ -1,0 +1,58 @@
+<!--
+/**
+ * YzKbNavNode
+ * Enables keyboard navigation on webpage
+ *
+ * Copyright (c) 2011 Weiss I Nicht <KeineAhnung@atliva.com> 
+ * @author Weiss I Nicht 
+ * (sha-1: 90f01291285340bf03c2d41952c4b21b3d338907)
+ * http://github.com/comolongo/yzKbNav
+ **/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>HTML 5 complete</title>
+<!--[if IE]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<style>
+  article, aside, details, figcaption, figure, footer, header,
+  hgroup, menu, nav, section { display: block; }
+
+.yzkn.focus {
+    background: green !important;
+}
+</style>
+</head>
+<body>
+  <ul>
+    <li class="yzkn" data-yzkn-pos="0:0">
+      Node A (Press enter to step into child node A-1)
+      <ul>
+        <li class="yzkn" data-yzkn-pos="0:0">Node A-1 (press backspace to go back to parent node A)</li>
+        <li class="yzkn" data-yzkn-pos="1:0">Node A-2 (press backspace to go back to parent node A)</li>
+      </ul>
+    </li>
+    <li class="yzkn" data-yzkn-pos="1:0">
+      Node B
+      <ul>
+        <li class="yzkn" data-yzkn-pos="0:0">Node B-1</li>
+        <li class="yzkn" data-yzkn-pos="1:0">Node B-2</li>
+      </ul>
+    </li>
+  </ul>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="../yzKbNavManager.js"></script>
+<script src="../yzKbNavNode.js"></script>
+<script src="../yzKbTextInputNavNode.js"></script>
+<script src="../yzKbNavNodesInfo.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    yzKbNavManager.init();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!--
+/**
+ * YzKbNavNode
+ * Enables keyboard navigation on webpage
+ *
+ * Copyright (c) 2011 Weiss I Nicht <KeineAhnung@atliva.com> 
+ * @author Weiss I Nicht 
+ * (sha-1: 90f01291285340bf03c2d41952c4b21b3d338907)
+ * http://github.com/comolongo/yzKbNav
+ **/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>HTML 5 complete</title>
+<!--[if IE]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<style>
+  article, aside, details, figcaption, figure, footer, header,
+  hgroup, menu, nav, section { display: block; }
+
+.yzkn.focus {
+    background: green !important;
+}
+.grid-item {
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  float: left;
+}
+.grid-item.end {
+  clear: right;
+}
+.grid-item.first {
+  clear: left;
+}
+</style>
+</head>
+<body>
+  <div id="grid-container">
+    <div class="yzkn grid-item" data-yzkn-pos="0:0">A</div>
+    <div class="yzkn grid-item" data-yzkn-pos="0:1">B</div>
+    <div class="yzkn grid-item end" data-yzkn-pos="0:2">C</div>
+    <div class="yzkn grid-item first" data-yzkn-pos="1:0">D</div>
+    <div class="yzkn grid-item" data-yzkn-pos="1:1">E</div>
+    <div class="yzkn grid-item end" data-yzkn-pos="1:2">F</div>
+    <div class="yzkn grid-item first" data-yzkn-pos="2:0">G</div>
+    <div class="yzkn grid-item" data-yzkn-pos="2:1">H</div>
+    <div class="yzkn grid-item" data-yzkn-pos="2:2">I</div>
+  </div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="../yzKbNavManager.js"></script>
+<script src="../yzKbNavNode.js"></script>
+<script src="../yzKbTextInputNavNode.js"></script>
+<script src="../yzKbNavNodesInfo.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    yzKbNavManager.init();
+});
+</script>
+</body>
+</html>
