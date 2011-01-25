@@ -73,14 +73,14 @@ yzKbFormFieldNavNode.prototype.focusToInputCursor = function(keyCode, keyIsAlpha
         if (keyIsAlphaNumeric) {
             initialPressedKey = String.fromCharCode(keyCode);
             if (shiftKey) {
-                _this._context.val(initialPressedKey.toUpperCase());
+                _this.context.val(initialPressedKey.toUpperCase());
             } else {
-                _this._context.val(initialPressedKey.toLowerCase())
+                _this.context.val(initialPressedKey.toLowerCase())
             }
         }
-        _this._context.focus();
+        _this.context.focus();
         if (!keyIsAlphaNumeric) {
-            _this._context.select();                    
+            _this.context.select();                    
         }
     }, 0);
 }
@@ -97,12 +97,12 @@ yzKbFormFieldNavNode.prototype.onFocus = function(params) {
     if (this.focusOnStepIn) {
         this.focusToInputCursor()
     }
-    if (this.focusOnStepInWithPopulatedText && this._context.val() != '') {
-        if (this._context.val() != this._context.attr('placeholder')) {
+    if (this.focusOnStepInWithPopulatedText && this.context.val() != '') {
+        if (this.context.val() != this.context.attr('placeholder')) {
             this.focusToInputCursor()
         }
     }
     this.notifyParentsOfFocus()
     this.centerNodeOnFocus(params)
-    this._context.addClass(YZKN_ON_FOCUS_CLASS);
+    this.context.addClass(YZKN_ON_FOCUS_CLASS);
 }

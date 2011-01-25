@@ -17,7 +17,7 @@ function yzKbNavNode(params) {
         params.siblingNodesInfo.setDefaultNode(this);
     }
     this.id                 = params.id
-    this._context           = params.jQContext;//jQuery DOM object to which current object is attached
+    this.context           = params.jQContext;//jQuery DOM object to which current object is attached
     this.passthrough        = params.passthrough
     this.groupNav           = params.groupNav
     this.row                = params.row;
@@ -154,8 +154,8 @@ yzKbNavNode.prototype.onUnfocus = function(nextNodeToFocus) {
     }
     this.unpauseMovement();
     this.notifyParentsOfFocus(true)
-    this._context.blur();
-    this._context.removeClass(YZKN_ON_FOCUS_CLASS);
+    this.context.blur();
+    this.context.removeClass(YZKN_ON_FOCUS_CLASS);
 }
 /**
  * Makes current node the current focused node
@@ -185,10 +185,10 @@ yzKbNavNode.prototype.onFocus = function(params) {
             return callbackResults
         }
     }
-    this._context.focus()
+    this.context.focus()
     this.notifyParentsOfFocus() 
     this.centerNodeOnFocus(params)
-    this._context.addClass(YZKN_ON_FOCUS_CLASS);
+    this.context.addClass(YZKN_ON_FOCUS_CLASS);
 }
 /**
  * notifies parent elements when node comes into focus
@@ -197,7 +197,7 @@ yzKbNavNode.prototype.onFocus = function(params) {
 yzKbNavNode.prototype.notifyParentsOfFocus = function(unfocus) {
     var parentElements;
     if (this.parentSelectorsToNotifyOnFocus) {
-        parentElements = this._context.parents(this.parentSelectorsToNotifyOnFocus)
+        parentElements = this.context.parents(this.parentSelectorsToNotifyOnFocus)
         if (unfocus) {
             parentElements.removeClass(YZKN_CHILD_FOCUSED_CLASS)
         } else {
@@ -226,11 +226,11 @@ yzKbNavNode.prototype.centerNodeOnFocus = function(params) {
 }
 yzKbNavNode.prototype.enable = function() {
     this.disabled = false;
-    this._context.removeClass(YZKN_DISABLED_CLASS)
+    this.context.removeClass(YZKN_DISABLED_CLASS)
 }
 yzKbNavNode.prototype.disable = function() {
     this.disabled = true;
-    this._context.addClass(YZKN_DISABLED_CLASS)
+    this.context.addClass(YZKN_DISABLED_CLASS)
 }
 /**
  * Ensure that when scrolling the currently focused node is always 
@@ -247,7 +247,7 @@ yzKbNavNode.prototype.centerFocusedNode = function() {
     //We want to scroll the next node to the center of the page
     //so that would be the the distance between the center of the page
     //and the distance of the new node from the top of the page
-    scrollAmount = windowHeight/2 - this._context.offset().top
+    scrollAmount = windowHeight/2 - this.context.offset().top
     this.__pageBody.animate({scrollTop: 0-scrollAmount}, 270)
     return true
 };
@@ -446,7 +446,7 @@ yzKbNavNode.prototype.destroy = function(forgoDetachingFirst) {
         this.childNodesInfo.destroyAllNodesAndDelete()
     }
     yzKbNavManager.unregisterNode(this.id)
-    this._context.removeData(YZKN_DATA_KEY)
+    this.context.removeData(YZKN_DATA_KEY)
     delete this
 }
 yzKbNavNode.prototype.destroyChildren = function() {
