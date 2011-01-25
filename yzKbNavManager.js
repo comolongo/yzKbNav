@@ -12,17 +12,22 @@ var YZKN_SELECTOR = '.yzkn', //CSS selector use to enable elements to be accessa
     YZKN_CHILD_FOCUSED_CLASS = 'yzkn-child-infocus',//indicates that a child node is currently in focus
     YZKN_DISABLED_CLASS = 'yzkn-disabled',
     YZKN_ON_FOCUS_CLASS = 'focus', //class CSS name to assign node when it is being focused
-    YZKN_DEFAULT_FOCUS_CLASS = 'yzkn-default-focus',
+    // Sets a node to be the first to receive focus among its siblings when stepping in from parent node
+    YZKN_DEFAULT_FOCUS_CLASS = 'yzkn-default-focus', 
     YZKN_POSITION_ATTR = 'data-yzkn-pos',
     //attribute for jquery selectors of closest parents to notify when kb node comes into focus
     YZKN_FOCUS_NOTIFY_SELECTORS_ATTR = 'data-yzkn-fns' 
+    // sets a parent node to automatically passthrough focus immediately to child nodes
     YZKN_PASSTHROUGH_CLASS = 'yzkn-passthrough';
     YZKN_GROUPNAV_CLASS = 'yzkn-groupnav'
     YZKN_AUTO_SCROLL_DISABLED_CLASS = 'yzkn-disable-auto-scroll'
+    // Sets a node and its decendents to be out side of the default navigation flow,
+    // i.e. other parent and sibling nodes will not know about the solo node
     YZKN_IS_SOLO_CLASS = 'yzkn-solo'
+    // allows focus to 
     YZKN_PRESET_XYZ_ATTR = 'data-yzkn-xyz',
-    //Attribute for indicating which movement directions are paused when in focus for text input fields
-    YZKN_PAUSED_TXT_DIR_ATTR = 'data-yzkn-txtmvt'
+    //Attribute for indicating which movement directions are paused when focused into text input fields
+    YZKN_FIELDMVT_ATTR = 'data-yzkn-fieldmvt'
 /**
  * Global collection for tracking yzKbNavNode objects and listening for mouse and keyboard actions
  **/
@@ -210,15 +215,15 @@ var yzKbNavManager = function() {
             }
             if (params.pausedMvmtDirWhenInFocus == undefined) {
               var pausedMovementDirs;
-              if (pausedMovementDirs = jQContext.attr(YZKN_PAUSED_TXT_DIR_ATTR)) {
+              if (pausedMovementDirs = jQContext.attr(YZKN_FIELDMVT_ATTR)) {
                 params.pausedMvmtDirWhenInFocus = pausedMovementDirs.split(';')
               }              
             }
             newNodeIdx = _collectionsCntr++
             params.id  = newNodeIdx
             if (params.nodeClass == undefined) {
-                if (jQContext.is(':text, textarea')) {
-                    nodeClass = yzKbTextInputNavNode;
+                if (jQContext.is(':text, textarea, select')) {
+                    nodeClass = yzKbFormFieldNavNode;
                 } else {
                     nodeClass  = yzKbNavNode;                
                 }                

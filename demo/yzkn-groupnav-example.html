@@ -27,23 +27,16 @@
 </style>
 </head>
 <body>
-  <ul>
-    <li class="yzkn" data-yzkn-pos="0:0">
-      Node A (Press enter to step into child node A-1)
-      <ul>
-        <li class="yzkn" data-yzkn-pos="0:0">Node A-1 (press backspace to go back to parent node A)</li>
-        <li class="yzkn" data-yzkn-pos="1:0">Node A-2 (press backspace to go back to parent node A)</li>
-      </ul>
-    </li>
-    <li class="yzkn" data-yzkn-pos="1:0">
-      Node B
-      <ul>
-        <li class="yzkn" data-yzkn-pos="0:0">Node B-1</li>
-        <li class="yzkn" data-yzkn-pos="1:0">Node B-2</li>
-      </ul>
-    </li>
-  </ul>
-
+  <a href="#" class="yzkn" data-yzkn-pos="0:0">Item A</a>
+  <div class="yzkn yzkn-groupnav" data-yzkn-pos="1:0">
+    <a href="#" class="yzkn" data-yzkn-pos="0:0">Item B</a>
+    <a href="#" class="yzkn" data-yzkn-pos="0:1">Item C</a>
+  </div>
+  <div class="yzkn yzkn-groupnav" data-yzkn-pos="2:0">
+    <a href="#" class="yzkn" data-yzkn-pos="0:0">Item D</a>
+    <a href="#" class="yzkn" data-yzkn-pos="0:1">Item E</a>
+  </div>
+  <a href="#" class="yzkn" data-yzkn-pos="3:0">Item F</a>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script src="../yzKbNavManager.js"></script>
 <script src="../yzKbNavNode.js"></script>

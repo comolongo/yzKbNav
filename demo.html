@@ -120,18 +120,27 @@ UL {
 	</ul>
 	<form id="standard form" action="#" onsubmit="console.log('form submit')">
 		<div class="form-items">
-			<label>Standard Form</label>
-			<input type="text">
+			<label>Standard field without cursor movement settings</label>
+			<input type="text" class="yzkn" data-yzkn-pos="auto:1">
 		</div>
 	</form>
 	<form id="form-items-test" action="#" onsubmit="console.log('form submit')">
+	  <h3>Form inputs with various levels of cursor movement settings (press enter to edit field values)</h3>
 		<div class="form-items">
-			<label for="test_text_input">Test Text Input</label>
-			<input id="test_text_input" type="text" class="yzkn" data-yzkn-pos="auto:1">
+			<label for="test_text_input">Left/right cursor movement enabled</label>
+			<input id="test_text_input" type="text" class="yzkn" data-yzkn-pos="auto:1" data-yzkn-fieldmvt="left;right;in">
 		</div>
 		<div class="form-items">
-			<label for="test_textarea">Test text area</label>
-			<textarea id="test_textarea" class="yzkn" data-yzkn-pos="auto:1"></textarea>
+			<label for="test_select_menu">up/down option selection movement enabled (escape to leave select menu)</label>
+			<select id="test_select_menu" class="yzkn" data-yzkn-pos="auto:1" data-yzkn-fieldmvt="up;down;in">
+			  <option>A</option>
+			  <option>B</option>
+			  <option>C</option>
+			</select>
+		</div>
+		<div class="form-items">
+			<label for="test_textarea">up/down left/right cursor movement enabled (escape to leave field)</label>
+			<textarea id="test_textarea" class="yzkn" data-yzkn-pos="auto:1" data-yzkn-fieldmvt="up;down;left;right;in"></textarea>
 		</div>
 		<div class="form-items">
 			<label>Test Radio Buttons</label>
@@ -170,7 +179,7 @@ UL {
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script src="yzKbNavManager.js"></script>
 <script src="yzKbNavNode.js"></script>
-<script src="yzKbTextInputNavNode.js"></script>
+<script src="yzKbFormFieldNavNode.js"></script>
 <script src="yzKbNavNodesInfo.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){

@@ -11,7 +11,7 @@
 /**
  * Node for handling textfields and textareas.
 **/
-var yzKbTextInputNavNode = function(params){
+var yzKbFormFieldNavNode = function(params){
     if (!params) { return }
     yzKbNavNode.apply(this, arguments)
     this.textInputOnKeyStrokeCallback
@@ -20,8 +20,8 @@ var yzKbTextInputNavNode = function(params){
     this.pausedMvmtDirWhenInFocus = params.pausedMvmtDirWhenInFocus || ['out']
 
 }
-yzKbTextInputNavNode.prototype = new yzKbNavNode
-yzKbTextInputNavNode.prototype.constructor = yzKbTextInputNavNode
+yzKbFormFieldNavNode.prototype = new yzKbNavNode
+yzKbFormFieldNavNode.prototype.constructor = yzKbFormFieldNavNode
 
 /**
  * When current input node is selected, typing any alpha numeric keys or pressing the 
@@ -31,7 +31,7 @@ yzKbTextInputNavNode.prototype.constructor = yzKbTextInputNavNode
  * press backspace. Only when the user presses the cancel or tab key is node navigation 
  * reactivated
  **/
-yzKbTextInputNavNode.prototype.onKeyStroke = function (keyPressEle) {
+yzKbFormFieldNavNode.prototype.onKeyStroke = function (keyPressEle) {
     var _this = this,
         keystrokeCallbackResults,
         keyCode = keyPressEle.keyCode,
@@ -61,7 +61,7 @@ yzKbTextInputNavNode.prototype.onKeyStroke = function (keyPressEle) {
     //Calling parent method
     return yzKbNavNode.prototype.onKeyStroke.call(this, keyPressEle);
 }
-yzKbTextInputNavNode.prototype.focusToInputCursor = function(keyCode, keyIsAlphaNumeric, shiftKey) {
+yzKbFormFieldNavNode.prototype.focusToInputCursor = function(keyCode, keyIsAlphaNumeric, shiftKey) {
     var _this = this
     setTimeout(function(){
         var numPausedMovementsWhenFocused = _this.pausedMvmtDirWhenInFocus.length,
@@ -89,7 +89,7 @@ yzKbTextInputNavNode.prototype.focusToInputCursor = function(keyCode, keyIsAlpha
  * the next input node, the focus() event will be triggered only when the user starts typing 
  * or when he presses the enter key, so its not triggered in this method
 **/
-yzKbTextInputNavNode.prototype.onFocus = function(params) {
+yzKbFormFieldNavNode.prototype.onFocus = function(params) {
     var autoScrollOverride;
     if (this.onFocusCallback) {
         this.onFocusCallback(params);

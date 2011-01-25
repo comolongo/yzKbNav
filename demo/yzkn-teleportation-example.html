@@ -1,0 +1,66 @@
+<!--
+/**
+ * YzKbNavNode
+ * Enables keyboard navigation on webpage
+ *
+ * Copyright (c) 2011 Weiss I Nicht <KeineAhnung@atliva.com> 
+ * @author Weiss I Nicht 
+ * (sha-1: 90f01291285340bf03c2d41952c4b21b3d338907)
+ * http://github.com/comolongo/yzKbNav
+ **/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>HTML 5 complete</title>
+<!--[if IE]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<style>
+  article, aside, details, figcaption, figure, footer, header,
+  hgroup, menu, nav, section { display: block; }
+
+.yzkn.focus {
+    background: green !important;
+}
+</style>
+</head>
+<body>
+<ul>
+  <li href="#" class="yzkn" data-yzkn-pos="auto:0" data-yzkn-xyz="in:solo-head">
+    Teleport into solo node by stepping in (press enter)
+  </li>
+  <li href="#" id="regular-flow-entry-point" class="yzkn" data-yzkn-pos="auto:0" data-yzkn-xyz="right:solo-head;in:solo-head">
+    Teleport into solo node by stepping in or going right <strong>&raquo;</strong> 
+  </li>
+  <li href="#" class="yzkn" data-yzkn-pos="auto:0">Random button</li>
+  <li href="#" class="yzkn" data-yzkn-pos="auto:0">Random button</li>  
+</ul>
+
+<div class="yzkn yzkn-solo" data-yzkn-pos="0:0">
+  <h3>Solo node</h3>
+  <ul>
+    <li id="solo-head" class="yzkn" data-yzkn-pos="auto:0" data-yzkn-xyz="left:regular-flow-entry-point;out:regular-flow-entry-point;up:solo-tail">
+      &laquo; Press left or backspace to return to regular flow
+    </li>
+    <li class="yzkn" data-yzkn-pos="auto:0" data-yzkn-xyz="out:regular-flow-entry-point">
+      Step out to go back to regular flow (press backspace)
+    </li>
+    <li id="solo-tail" class="yzkn" data-yzkn-pos="auto:0" data-yzkn-xyz="out:regular-flow-entry-point;down:solo-head">
+      Step out to go back to regular flow  (press backspace)
+    </li>
+  </ul>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="../yzKbNavManager.js"></script>
+<script src="../yzKbNavNode.js"></script>
+<script src="../yzKbFormFieldNavNode.js"></script>
+<script src="../yzKbNavNodesInfo.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    yzKbNavManager.init();
+});
+</script>
+</body>
+</html>

@@ -24,26 +24,35 @@
 .yzkn.focus {
     background: green !important;
 }
+.grid-item {
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  float: left;
+}
+.grid-item.end {
+  clear: right;
+}
+.grid-item.first {
+  clear: left;
+}
 </style>
 </head>
 <body>
   <ul>
-    <li class="yzkn" data-yzkn-pos="0:0">
-      Node A (Press enter to step into child node A-1)
+    <li class="yzkn" data-yzkn-pos="auto:0">Regular Flow Item</li>
+    <li class="yzkn" data-yzkn-pos="auto:0">Regular Flow Item</li>
+    <li class="yzkn yzkn-solo" data-yzkn-pos="auto:0">
+      Independent flow node
       <ul>
-        <li class="yzkn" data-yzkn-pos="0:0">Node A-1 (press backspace to go back to parent node A)</li>
-        <li class="yzkn" data-yzkn-pos="1:0">Node A-2 (press backspace to go back to parent node A)</li>
+        <li class="yzkn" data-yzkn-pos="auto:0">Part of independent flow</li>
+        <li class="yzkn" data-yzkn-pos="auto:0">Part of independent flow</li>
+        <li class="yzkn" data-yzkn-pos="auto:0">Part of independent flow</li>
       </ul>
     </li>
-    <li class="yzkn" data-yzkn-pos="1:0">
-      Node B
-      <ul>
-        <li class="yzkn" data-yzkn-pos="0:0">Node B-1</li>
-        <li class="yzkn" data-yzkn-pos="1:0">Node B-2</li>
-      </ul>
-    </li>
+    <li class="yzkn" data-yzkn-pos="auto:0">Regular Flow Item</li>
+    <li class="yzkn" data-yzkn-pos="auto:0">Regular Flow Item</li>  
   </ul>
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script src="../yzKbNavManager.js"></script>
 <script src="../yzKbNavNode.js"></script>
