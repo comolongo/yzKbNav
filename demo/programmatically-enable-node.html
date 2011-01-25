@@ -1,0 +1,98 @@
+<!--
+/**
+ * YzKbNavNode
+ * Enables keyboard navigation on webpage
+ *
+ * Copyright (c) 2011 Weiss I Nicht <KeineAhnung@atliva.com> 
+ * @author Weiss I Nicht 
+ * (sha-1: 90f01291285340bf03c2d41952c4b21b3d338907)
+ * http://github.com/comolongo/yzKbNav
+ **/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>HTML 5 complete</title>
+<!--[if IE]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<style>
+  article, aside, details, figcaption, figure, footer, header,
+  hgroup, menu, nav, section { display: block; }
+
+.yzkn.focus {
+    background: green !important;
+}
+UL {
+  list-style: none;
+}
+#resultsWrapper {
+    float: left;
+    clear:both;
+    background: orange;
+    width: 800px;
+    padding: 10px;
+}
+#resultsWrapper LI.resultsItem {
+    float: left;
+    clear: both;
+    width: 800px;
+    background: blue;
+}
+#resultsWrapper LI DIV {
+    background: red;
+    float: left;
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+}
+#resultsWrapper LI DIV.yzkn-disabled {
+  background: yellow;
+}
+</style>
+</head>
+<body>
+  <ul class="yzkn yzkn-passthrough" id="resultsWrapper" data-yzkn-pos="auto:0">
+  	<li class="resultsItem">
+  		<div class="yzkn" id="enable_toggler" data-yzkn-pos="0:auto">Press enter to enable/disable center node</div>
+  		<div class="yzkn" data-yzkn-pos="0:auto"></div>
+  		<div class="yzkn play" data-yzkn-pos="0:auto"></div>
+  	</li>
+  	<li class="resultsItem">
+  		<div class="yzkn" data-yzkn-pos="1:auto"></div>
+  		<div class="yzkn yzkn-disabled" id="center-node" data-yzkn-pos="1:auto">(disabled node)</div>
+  		<div class="yzkn" data-yzkn-pos="1:auto"></div>
+  	</li>
+  	<li class="resultsItem">
+  		<div class="yzkn" data-yzkn-pos="2:auto"></div>
+  		<div class="yzkn" data-yzkn-pos="2:auto"></div>
+  		<div class="yzkn" data-yzkn-pos="2:auto"></div>
+  	</li>
+  </ul>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="../yzKbNavManager.js"></script>
+<script src="../yzKbNavNode.js"></script>
+<script src="../yzKbFormFieldNavNode.js"></script>
+<script src="../yzKbNavNodesInfo.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    yzKbNavManager.init();
+    var centerNode = yzKbNavManager.getNodeByDom($('#center-node'))
+    var togglerNode = yzKbNavManager.getNodeByDom($('#enable_toggler'))
+    togglerNode.moveFromInOutCallback = function(direction) {
+      if (direction == 'in') {
+        if (centerNode.disabled) {
+          centerNode.enable()
+          centerNode.context.html('enabled')
+        } else {
+          centerNode.disable()
+          centerNode.context.html('disabled')
+
+        }
+      }
+    }
+});
+</script>
+</body>
+</html>

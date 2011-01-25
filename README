@@ -150,6 +150,49 @@ Code:
   <li class="yzkn" data-yzkn-pos="auto:0">Regular Flow Item</li>  
 </ul>
 
+yzkn-disabled
+Makes a node disabled. While disabled, a node cannot be focused and cannot interact with the DOM. The node can be enabled interactively using the yzKbNavNode::enable() method
+
+Live Example: <http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo/programmatically-enable-node.html>
+
+Code:
+<ul class="yzkn yzkn-passthrough" id="resultsWrapper" data-yzkn-pos="auto:0">
+	<li class="resultsItem">
+		<div class="yzkn" id="enable_toggler" data-yzkn-pos="0:auto">Press enter to enable/disable center node</div>
+		<div class="yzkn" data-yzkn-pos="0:auto"></div>
+		<div class="yzkn play" data-yzkn-pos="0:auto"></div>
+	</li>
+	<li class="resultsItem">
+		<div class="yzkn" data-yzkn-pos="1:auto"></div>
+		<div class="yzkn yzkn-disabled" id="center-node" data-yzkn-pos="1:auto">(disabled node)</div>
+		<div class="yzkn" data-yzkn-pos="1:auto"></div>
+	</li>
+	<li class="resultsItem">
+		<div class="yzkn" data-yzkn-pos="2:auto"></div>
+		<div class="yzkn" data-yzkn-pos="2:auto"></div>
+		<div class="yzkn" data-yzkn-pos="2:auto"></div>
+	</li>
+</ul>
+<script type="text/javascript">
+$(document).ready(function(){
+    yzKbNavManager.init();
+    var centerNode = yzKbNavManager.getNodeByDom($('#center-node'))
+    var togglerNode = yzKbNavManager.getNodeByDom($('#enable_toggler'))
+    togglerNode.moveFromInOutCallback = function(direction) {
+      if (direction == 'in') {
+        if (centerNode.disabled) {
+          centerNode.enable()
+          centerNode.context.html('enabled')
+        } else {
+          centerNode.disable()
+          centerNode.context.html('disabled')
+
+        }
+      }
+    }
+});
+</script>
+
 Decorator attributes:
 Certain behavior settings/customizations require configuration values, in those cases, decorator attributes are used.
 
