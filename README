@@ -8,21 +8,31 @@ http://github.com/comolongo/yzKbNav
 
 This library allows developers to easily bring keyboard navigation to their websites. The code base comes with a very extensible API, so it is easy to customize and extend the existing functionalities. This library requires jQuery and uses it to do basic dom manipulation i.e. adding and checking for the presence of certain CSS classes.
 
-Setting up node traversal in HTML:
-Each keyboard traversable item on the page is a node, which can have children, siblings, and a parent node. All nodes are explicitly assigned a row and column number to determine how the focus will change when the user tries to move along the XY axis.
+Quick Demo:
+http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo.html
 
-Basic example of vertical list: <http://yz-demos.appspot.com/yzKbNavNode/demo/basic-list-example.html>
-
+Example code of simple page:
+Live version: <http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo/basic-list-example.html>
 <ul>
   <li class="yzkn" data-yzkn-pos="0:0">A</li>
   <li class="yzkn" data-yzkn-pos="1:0">B</li>
   <li class="yzkn" data-yzkn-pos="2:0">C</li>
   <li class="yzkn" data-yzkn-pos="3:0">D</li>
 </ul>
+<script type="text/javascript">
+$(document).ready(function(){
+    yzKbNavManager.init();
+});
+</script>
 
-The data-yzkn-pos indicates the node's coordinates in the format of row#:col#. Item A is in row 0 and column 0, item B is in row 1 and column 0, etc.
 
-Example of grid <http://yz-demos.appspot.com/yzKbNavNode/demo/grid-example.html> :
+What is going on:
+Each keyboard traversable item on the page is a node, which can have children, siblings, and a parent node. All nodes are explicitly assigned a row and column number to establish its position relative to its sibling nodes. In the above example, we have a list of nodes all in the same column but are on different rows. Pressing the up and down key will move the focus between the different rows; since there is only a single column, pressing left and right keys will not do anything.
+
+On page load, yzKbNavManager.init() is called to initialize all of the nodes. It gathers all elements on the page that have the class yzkn and then creates a yzKbNavNode object for each element to keep track of its node parent, children, and sibling node information. Since no default focus node is defined, the default item to focus on will be the element in the first column of the first row; in this case, node A. When the user presses, up, down, left, right, enter, or backspace, an event handler that is attached to the document.body in yzKbNavManager::_setEventHandlers() picks up the keystrokes and passes it to the currently focused node.
+
+
+Example of grid <http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo/grid-example.html> :
 
 <div id="grid-container">
   <!-- Draws a 3x3 grid -->
@@ -38,7 +48,8 @@ Example of grid <http://yz-demos.appspot.com/yzKbNavNode/demo/grid-example.html>
 </div>
 
 Here we have a slightly more complicated grid, with three rows (rows: 0, 1, and 2) and each row has 3 columns (columns: 0, 1, and 2)
-The column numbers don't need to be continuous, this allows for holes in the grid, i.e. <http://yz-demos.appspot.com/yzKbNavNode/demo/grid-with-gaps-example.html>
+
+The column numbers don't need to be continuous, this allows for holes in the grid, for example <http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo/grid-with-gaps-example.html>: 
 
 <div id="grid-container">
   <div class="yzkn grid-item" data-yzkn-pos="0:0">A</div>
@@ -58,7 +69,7 @@ Node hierarchy:
 Thus far, the examples have been only node traversal among sibling nodes, in the XY plane. Nodes can also have parent-child relationships.
 
 Example of parent and child nodes
-<http://yz-demos.appspot.com/yzKbNavNode/demo/parent-child-example.html>
+<http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo/parent-child-example.html>
 
 <ul>
   <li class="yzkn" data-yzkn-pos="0:0">
@@ -77,11 +88,132 @@ Example of parent and child nodes
   </li>
 </ul>
 
+Decorators and node configuration via html markup:
+When designating an HTML element to be a kbNavNode, there are many custom attributes and class names which which you can decorate the element to customize its behavior without writing a single line of javascript code!
 
-Setting up JavaScript:
-On page load, yzKbNavManager.init() is run to initialize all of the nodes. This method gathers all elements on the page that have the class yzkn and then creates a yzKbNavNode object to associate with it and keep track of the node's parent, children, and sibling information. If no default focus node is defined, the default item to focus on will be the element in the first column of the first row. When the user presses, up, down, left, right, enter, or backspace, an event handler that is attached to the document.body in yzKbNavManager::_setEventHandlers() picks up the keystrokes and passes it to the currently focused node. The currently focused node will then find the appropriate node to focus on, and will call yzKbNavManager::focusToNewNode() to bring the focus to that node. Instead of registering an event handler for each keyboard node, clicking on a node will bubble up the DOM until it reaches the document root, where it gets processed in yzKbNavManager::focusToNewNode.
+Decorator classes:
+Decorator classes are like boolean flags, you add the class to the kbNavNode element to enable a particular behavior.
 
-Javascript Mixin hooks:
+yzkn-default-focus
+Sets an item to be the default focused item among its siblings. In the given example, item b will be the first to receive focus when user steps in from the parent node:
+
+<div class="yzkn" data-yzkn-pos="0:0">
+  <a href="#" class="yzkn" data-yzkn-pos="0:0">Item A</a>
+  <a href="#" class="yzkn yzkn-default-focus" data-yzkn-pos="0:1">Item B</a>
+</div>
+
+yzkn-passthrough
+Makes a parent node passthrough all focus immediately to its child by default. For example, if you are focused on Item A and move down into passthrough-group-1, the focus will be set to Item B:
+Live example: <http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo/yzkn-passthrough-example.html>
+
+<a href="#" class="yzkn" data-yzkn-pos="0:0">Item A</a>
+<div id="passthrough-group-1" class="yzkn yzkn-passthrough" data-yzkn-pos="1:0">
+  <a href="#" class="yzkn" data-yzkn-pos="0:0">Item B</a>
+  <a href="#" class="yzkn" data-yzkn-pos="0:1">Item C</a>
+</div>
+<div class="yzkn yzkn-passthrough" data-yzkn-pos="2:0">
+  <a href="#" class="yzkn" data-yzkn-pos="0:0">Item D</a>
+  <a href="#" class="yzkn" data-yzkn-pos="0:1">Item E</a>
+</div>
+
+yzkn-disable-auto-scroll
+By default, auto scroll is enabled so that the node will be scrolled to the middle of the page, e.g.
+<http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo/yzkn-autoscroll-example.html>
+
+To prevent the item from scrolling to the middle of the page, add yzkn-disable-auto-scroll to the dom element:
+<ul>
+  <li class="yzkn yzkn-disable-auto-scroll" data-yzkn-pos="auto:0">Autoscrolling Row</li>
+  <li class="yzkn yzkn-disable-auto-scroll" data-yzkn-pos="auto:0">Autoscrolling Row</li>
+  ...
+  <li class="yzkn yzkn-disable-auto-scroll" data-yzkn-pos="auto:0">Autoscrolling Row</li>
+  <li class="yzkn yzkn-disable-auto-scroll" data-yzkn-pos="auto:0">Autoscrolling Row</li>
+</ul>
+
+yzkn-solo
+Used for creating a node that is disconnected from the default navigation flow. This means that nodes in the default flow can never traverse to a solo node by regular means and vice versa (you can jump from the default flow nodes to the solo node by clicking on the solo node via the mouse or by programmatically focusing on the solo node). This flag can be used for modal windows and other components that are not part of the regular navigation flow.
+
+Live Example: <http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo/yzkn-solo-example.html>
+
+Code:
+<ul>
+  <li class="yzkn" data-yzkn-pos="auto:0">Regular Flow Item</li>
+  <li class="yzkn" data-yzkn-pos="auto:0">Regular Flow Item</li>
+  <li class="yzkn yzkn-solo" data-yzkn-pos="auto:0">
+    Independent flow node
+    <ul>
+      <li class="yzkn" data-yzkn-pos="auto:0">Part of independent flow</li>
+      <li class="yzkn" data-yzkn-pos="auto:0">Part of independent flow</li>
+      <li class="yzkn" data-yzkn-pos="auto:0">Part of independent flow</li>
+    </ul>
+  </li>
+  <li class="yzkn" data-yzkn-pos="auto:0">Regular Flow Item</li>
+  <li class="yzkn" data-yzkn-pos="auto:0">Regular Flow Item</li>  
+</ul>
+
+Decorator attributes:
+Certain behavior settings/customizations require configuration values, in those cases, decorator attributes are used.
+
+data-yzkn-pos
+This attribute has already been covered earlier. It is required for all yzKbNodes and sets the position of the node relative to its siblings.
+
+data-yzkn-xyz (e.g. data-yzkn-xyz="in:ItemA_id;right:ItemB_id")
+Overrides a node's behavior for traversing the X, Y, and Z axis. Traversing in a direction specified by the attribute would bring the focus to the node with the corresponding ID.
+Possible directions are: up, down, left, right, in, out
+
+Live Example: <http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo/yzkn-teleportation-example.html>
+
+Code:
+<ul>
+  <li href="#" class="yzkn" data-yzkn-pos="auto:0" data-yzkn-xyz="in:solo-head">
+    Teleport into solo node by stepping in (press enter)
+  </li>
+  <li href="#" id="regular-flow-entry-point" class="yzkn" data-yzkn-pos="auto:0" data-yzkn-xyz="right:solo-head;in:solo-head">
+    Teleport into solo node by stepping in or going right <strong>&raquo;</strong> 
+  </li>
+  <li href="#" class="yzkn" data-yzkn-pos="auto:0">Random button</li>
+  <li href="#" class="yzkn" data-yzkn-pos="auto:0">Random button</li>  
+</ul>
+
+<div class="yzkn yzkn-solo" data-yzkn-pos="0:0">
+  <h3>Solo node</h3>
+  <ul>
+    <li id="solo-head" class="yzkn" data-yzkn-pos="auto:0" data-yzkn-xyz="left:regular-flow-entry-point;out:regular-flow-entry-point;up:solo-tail">
+      &laquo; Press left or backspace to return to regular flow
+    </li>
+    <li class="yzkn" data-yzkn-pos="auto:0" data-yzkn-xyz="out:regular-flow-entry-point">
+      Step out to go back to regular flow (press backspace)
+    </li>
+    <li id="solo-tail" class="yzkn" data-yzkn-pos="auto:0" data-yzkn-xyz="out:regular-flow-entry-point;down:solo-head">
+      Step out to go back to regular flow  (press backspace)
+    </li>
+  </ul>
+</div>
+
+data-yzkn-fieldmvt (e.g. data-yzkn-fieldmvt="up;down")
+By default when focus is on an input field, textarea, or select menu, pressing any of the directional keys, i.e. up, down, left, or right, will move the focus out of the field instead of moving the cursor to a different character or select option.  The data-yzkn-fieldmvt prevents the focus from leaving an input field when the keys for the specified directions are pressed and allows the user to move the cursor within the field.
+
+Look at the form fields in <http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo.html> as a reference for how they can behave
+
+Example code:
+<div class="form-items">
+	<label for="test_text_input">Left/right cursor movement enabled</label>
+	<input id="test_text_input" type="text" class="yzkn" data-yzkn-pos="auto:1" data-yzkn-fieldmvt="left;right;in">
+</div>
+<div class="form-items">
+	<label for="test_select_menu">up/down option selection movement enabled (escape to leave select menu)</label>
+	<select id="test_select_menu" class="yzkn" data-yzkn-pos="auto:1" data-yzkn-fieldmvt="up;down;in">
+	  <option>A</option>
+	  <option>B</option>
+	  <option>C</option>
+	</select>
+</div>
+<div class="form-items">
+	<label for="test_textarea">up/down left/right cursor movement enabled (escape to leave field)</label>
+	<textarea id="test_textarea" class="yzkn" data-yzkn-pos="auto:1" data-yzkn-fieldmvt="up;down;left;right;in"></textarea>
+</div>
+
+
+Javascript Mixin hooks/callbacks to customize node behavior:
 Each node instance has a series of callbacks that can add custom functionality. These hooks allow for custom handling of behavior when focus either 
 enters the node or when it leaves it. A return value of undefined from the callbacks will allow the default actions that regularly take place to still happen. A return value or true or false will stop the flow and prevent the default actions; i.e. the moveToXYCallback hook is called when the focus is about to move into the current node instance. If the moveToXYCallback is set to a function that returns true or false, then the focus will not goto the current node; it will stay at the previously focused node.
 
@@ -112,8 +244,11 @@ yzKbNavNode.onFocusCallback
 // called when a new node is being focused on and current node instance is about to give up its focus
 yzKbNavNode.onUnfocusCallback
 
-E.g: <http://yz-demos.appspot.com/yzKbNavNode/demo/attach-js-callback-example.html>
+Example of customizing node behavior by adding callback functions:
 
+Live example: <http://yz-demos.appspot.com/static/js/lib/yzKbnav/demo/attach-js-callback-example.html>
+
+Code:
 <ul>
   <li id="show-position-node" class="yzkn" data-yzkn-pos="0:0">
     <span id="position-display">Show movement</span>
@@ -143,6 +278,4 @@ $(document).ready(function(){
 });
 </script>
 
-Look in the source code of yzKbNavNode.js for more details on how to use the mixin hooks
-
-
+Look in the source code of yzKbNavNode.js <https://github.com/comolongo/yzKbNav/blob/master/yzKbNavNode.js> for more details on how to use the mixin hooks
